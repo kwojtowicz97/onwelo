@@ -1,5 +1,5 @@
 export type ExchangeRate = {
-  id?: number;
+  id: number;
   rate: number;
   date: Date;
   table_no: string;

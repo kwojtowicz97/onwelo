@@ -11,7 +11,7 @@ import {
   SuccessResponse,
   fetchBookAndExchangeRateData,
 } from './utlis/fetchBookAndExchangeRateData';
-import { saveAuthorToDatabase } from './utlis/saveAuthorToDatabase';
+import { saveToDatabase } from './utlis/saveToDatabase';
 
 dotenv.config();
 
@@ -50,16 +50,9 @@ app.post('/upload', upload.single('file'), async (req, res) => {
   const errors = results.filter((result) => !result.ok) as ErrorResponse[];
   const ebooks = results.filter((result) => result.ok) as SuccessResponse[];
 
-  const savedAuthors = await Promise.all(
-    ebooks.map((ebook) =>
-      saveAuthorToDatabase({
-        apple_id: ebook.bookData?.artistId,
-        name: ebook.bookData?.artistName,
-      })
-    )
-  );
-
-  console.log(savedAuthors);
+  for (const ebook of ebooks) {
+    await saveToDatabase(ebook);
+  }
 
   res.json({ errors, ebooks });
 });

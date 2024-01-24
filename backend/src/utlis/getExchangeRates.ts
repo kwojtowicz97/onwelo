@@ -18,6 +18,7 @@ export const getExchangeRateData = async (
   }
 
   const savedExchangeRate = await database('exchange_rates')
+    .select('*')
     .where({
       date: clonedDate.toISOString().split('T')[0],
     })
@@ -41,14 +42,16 @@ export const getExchangeRateData = async (
   }
   const data: NbpApiResponse = await response.json();
 
-  const model: ExchangeRate = {
+  const model: Omit<ExchangeRate, 'id'> = {
     date: clonedDate,
     rate: data.rates[0].mid,
     table_no: data.rates[0].no,
   };
 
-  const savedModel: ExchangeRate = (
-    await database('exchange_rates').insert(model, '*')
-  )[0];
-  return savedModel;
+  const savedModelId = (await database('exchange_rates').insert(model))[0];
+
+  return {
+    ...model,
+    id: savedModelId,
+  };
 };

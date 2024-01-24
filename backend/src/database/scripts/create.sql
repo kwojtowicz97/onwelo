@@ -11,19 +11,20 @@ CREATE TABLE exchange_rates (
 
 CREATE TABLE authors (
   id INT PRIMARY KEY AUTO_INCREMENT,
-  apple_id: INT
+  apple_id INT,
   name VARCHAR(255)
 );
 
 CREATE TABLE ebooks (
   id INT PRIMARY KEY AUTO_INCREMENT,
-  name INT,
+  apple_id INT,
+  artist_id INT,
   title VARCHAR(255),
   price_usd FLOAT,
   price_pln FLOAT,
   date DATE,
-  exchange_rate INT,
-  FOREIGN KEY (exchange_rate) REFERENCES exchange_rates(id)
+  exchange_rate_id INT,
+  FOREIGN KEY (exchange_rate_id) REFERENCES exchange_rates(id)
 );
 
 CREATE TABLE ebooks_authors (

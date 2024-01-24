@@ -1,10 +1,10 @@
-import { ExchangeRate } from './exchangeRate';
-
 export type Ebook = {
   id?: number;
-  name: string;
+  apple_id: number;
+  artist_id: number;
   title: string;
   price_usd: number;
+  price_pln: number;
   date: Date;
-  exchange_rate: ExchangeRate;
+  exchange_rate_id: number;
 };
