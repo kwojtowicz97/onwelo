@@ -1,4 +1,3 @@
-import { log } from 'console';
 import { database } from '../database/db';
 import { Ebook } from '../models/ebook';
 import { SuccessResponse } from './fetchBookAndExchangeRateData';
@@ -41,14 +40,6 @@ export const saveToDatabase = async (data: SuccessResponse) => {
     throw new Error('No exchange rate data');
   }
 
-  log(data.exchangeRateData);
-
-  log(
-    data.bookData.price,
-    data.exchangeRateData.rate,
-    data.bookData.price * data.exchangeRateData.rate
-  );
-
   const price_pln = data.bookData.price * data.exchangeRateData.rate;
 
   const model: Ebook = {
@@ -61,7 +52,12 @@ export const saveToDatabase = async (data: SuccessResponse) => {
     apple_id: data.bookData.trackId,
   };
 
-  const savedEbook = await database('ebooks').insert(model, '*');
+  const savedEbookId = (await database('ebooks').insert(model, '*'))[0];
 
-  return savedEbook[0];
+  await database('ebooks_authors').insert({
+    ebook_id: savedEbookId,
+    author_id: author.id,
+  });
+
+  return savedEbookId;
 };
