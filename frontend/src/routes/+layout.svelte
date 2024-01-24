@@ -4,7 +4,7 @@
 	const pathname = $page.url.pathname;
 </script>
 
-<div class="bg-light" style="min-height: 100dvh;">
+<div style="min-height: 100dvh;">
 	<div class="container">
 		<nav class="navbar navbar-expand-lg navbar-light">
 			<div class="container-fluid">
@@ -34,10 +34,14 @@
 							>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" class:active={pathname === '/ebooks'} href="/ebooks">Ebooks</a>
+							<a class="nav-link" class:active={pathname === '/ebooks'} href="/browse"
+								>Browse Ebooks</a
+							>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" class:active={pathname === '/authors'} href="/authors">Authors</a>
+							<a class="nav-link" class:active={pathname === '/authors'} href="/authors"
+								>Browse Authors</a
+							>
 						</li>
 					</ul>
 				</div>
