@@ -1,7 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
-import knex from 'knex';
-import connections from './database/knexfile';
+
 import { Author } from './models/author';
 import multer from 'multer';
 import { parseCsv } from './utlis/parseCsv';
@@ -9,13 +8,12 @@ import { getBooksData } from './utlis/getBooksData';
 import { getExchangeRateData } from './utlis/getExchangeRates';
 import { Ebook } from './models/ebook';
 import { ResponseDto } from './dtos/response.dto';
+import { database } from './database/db';
 
 dotenv.config();
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-
-const database = knex(connections[process.env.NODE_ENV || 'development']);
 
 database.raw('SELECT 1').then(() => {
   console.log('[database] Database is connected');
