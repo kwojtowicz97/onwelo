@@ -8,9 +8,10 @@ dotenv.config();
 const database = knex(connections[process.env.NODE_ENV || 'development'])
 
 // log if database is connected
-database.raw("SELECT 1+1 as result").then((result) => {
-  console.log(result.rows[0].result)
+database.raw("SELECT 1").then(() => {
+    console.log("[database] Database is connected");
 })
+
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
