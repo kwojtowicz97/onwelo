@@ -36,6 +36,10 @@ export const saveToDatabase = async (data: SuccessResponse) => {
     return existingEbook;
   }
 
+  console.log(data.bookData.trackId);
+
+  console.log("Console doesn't exist");
+
   if (!data.exchangeRateData) {
     throw new Error('No exchange rate data');
   }

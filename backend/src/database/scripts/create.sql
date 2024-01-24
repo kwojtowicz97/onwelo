@@ -11,14 +11,14 @@ CREATE TABLE exchange_rates (
 
 CREATE TABLE authors (
   id INT PRIMARY KEY AUTO_INCREMENT,
-  apple_id INT,
+  apple_id BIGINT,
   name VARCHAR(255)
 );
 
 CREATE TABLE ebooks (
   id INT PRIMARY KEY AUTO_INCREMENT,
-  apple_id INT,
-  artist_id INT,
+  apple_id BIGINT,
+  artist_id BIGINT,
   title VARCHAR(255),
   price_usd FLOAT,
   price_pln FLOAT,
