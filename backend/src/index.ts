@@ -5,6 +5,7 @@ import connections from './database/knexfile';
 import { Author } from './types/author';
 import multer from 'multer';
 import { parseCsv } from './utlis/parseCsv';
+import { getBooksData } from './utlis/getBooksData';
 
 dotenv.config();
 
@@ -34,9 +35,17 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     return res.status(400).json({ error: 'File is not CSV' });
   }
 
-  const results = await parseCsv(req.file);
+  const books = await parseCsv(req.file);
 
-  res.json(results);
+  books.forEach(async (book) => {
+    try {
+      console.log(await getBooksData(book));
+    } catch (error) {
+      console.log;
+    }
+  });
+
+  res.json(books);
 });
 
 app.listen(port, () => {
