@@ -4,11 +4,9 @@ import dotenv from 'dotenv';
 import { Author } from './models/author';
 import multer from 'multer';
 import { parseCsv } from './utlis/parseCsv';
-import { getBooksData } from './utlis/getBooksData';
-import { getExchangeRateData } from './utlis/getExchangeRates';
-import { Ebook } from './models/ebook';
-import { ResponseDto } from './dtos/response.dto';
+
 import { database } from './database/db';
+import { fetchBookAndExchangeRateData } from './utlis/fetchBookAndExchangeRateData';
 
 dotenv.config();
 
@@ -38,48 +36,16 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
   const parsedEbooksInputData = await parseCsv(req.file);
 
-  const errors: ResponseDto['errors'] = [];
-  const ebooks: ResponseDto['ebooks'] = [];
+  const promises = parsedEbooksInputData.map((book) =>
+    fetchBookAndExchangeRateData(book)
+  );
 
-  const promises = parsedEbooksInputData.map(async (book) => {
-    try {
-      const bookData = await getBooksData(book);
-      const exchangeRateData = await getExchangeRateData(bookData.book.date);
+  const results = await Promise.all(promises);
 
-      const price_pln = +(
-        exchangeRateData.rates[0].mid * bookData.book.price_usd
-      ).toFixed(2);
-      const table_no = exchangeRateData.rates[0].no;
-      const rate = exchangeRateData.rates[0].mid;
-      ebooks.push({
-        name: bookData.author.name,
-        title: bookData.book.title,
-        curr: 'USD',
-        price: bookData.book.price_usd,
-        date: bookData.book.date.toISOString(),
-        fromNBP: {
-          rate,
-          pricePLN: price_pln,
-          tableNo: table_no,
-        },
-      });
-    } catch (error: any) {
-      errors.push({
-        title: book.title,
-        author: book.name,
-        error: error.message,
-      });
-    }
-  });
+  const errors = results.filter((result) => !result.ok);
+  const ebooks = results.filter((result) => result.ok);
 
-  await Promise.all(promises);
-
-  const response: ResponseDto = {
-    errors,
-    ebooks,
-  };
-
-  res.json(response);
+  res.json({ errors, ebooks });
 });
 
 app.listen(port, () => {

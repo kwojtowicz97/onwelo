@@ -25,6 +25,6 @@ export const parseCsv = (file: Express.Multer.File) => {
         results.push(data);
       })
       .on('end', () => resolve(mapData(results)))
-      .on('error', (error: any) => reject(error));
+      .on('error', (error: unknown) => reject(error));
   });
 };

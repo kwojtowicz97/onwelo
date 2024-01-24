@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
 import { NbpApiResponse } from '../dtos/nbpResponse.dto';
+import { database } from '../database/db';
+import { ExchangeRate } from '../models/exchangeRate';
 
 dotenv.config();
 
@@ -11,6 +13,16 @@ export const getExchangeRateData = async (date: Date) => {
   if (day === 0 || day === 6) {
     const daysToSubtract = day === 6 ? 1 : 2;
     clonedDate.setDate(clonedDate.getDate() - daysToSubtract);
+  }
+
+  const savedExchangeRate = await database('exchange_rates')
+    .where({
+      date: clonedDate.toISOString().split('T')[0],
+    })
+    .first();
+
+  if (savedExchangeRate) {
+    return savedExchangeRate;
   }
 
   const baseUrl = process.env.NBP_API!;
@@ -27,5 +39,13 @@ export const getExchangeRateData = async (date: Date) => {
   }
   const data: NbpApiResponse = await response.json();
 
-  return data;
+  const model: ExchangeRate = {
+    date: clonedDate,
+    rate: data.rates[0].mid,
+    table_no: data.rates[0].no,
+  };
+
+  const savedModel = await database('exchange_rates').insert(model, '*');
+
+  return savedModel;
 };

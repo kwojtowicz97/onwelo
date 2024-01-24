@@ -1,4 +1,4 @@
-import { URL, URLSearchParams } from 'url';
+import { URLSearchParams } from 'url';
 import { InputData } from '../dtos/inputData';
 import dotenv from 'dotenv';
 import { AppleApiResponse } from '../dtos/appleResponse.dto';
@@ -15,7 +15,6 @@ export const getBooksData = async (
   searchParams.append('term', `${book.name} ${book.title}`);
   searchParams.append('media', 'ebook');
   searchParams.append('limit', '1');
-  console.log(`${baseUrl}?${searchParams.toString()}`);
   const response = await fetch(`${baseUrl}?${searchParams.toString()}`);
   if (!response.ok) {
     throw new Error('Apple API is not available');
