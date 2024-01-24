@@ -1,7 +1,7 @@
 import { URL, URLSearchParams } from 'url';
 import { InputData } from '../dtos/inputData';
 import dotenv from 'dotenv';
-import { AppleApiResponse, Book } from '../dtos/appleResponse.dto';
+import { AppleApiResponse } from '../dtos/appleResponse.dto';
 import { Author } from '../models/author';
 import { Ebook } from '../models/ebook';
 

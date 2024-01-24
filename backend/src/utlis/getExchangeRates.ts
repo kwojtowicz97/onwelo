@@ -26,5 +26,6 @@ export const getExchangeRateData = async (date: Date) => {
     throw new Error('NBP API is not available');
   }
   const data: NbpApiResponse = await response.json();
+
   return data;
 };

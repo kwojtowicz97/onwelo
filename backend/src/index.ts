@@ -22,7 +22,7 @@ database.raw('SELECT 1').then(() => {
 const app: Express = express();
 const port = process.env.PORT || 3000;
 
-app.get('/', async (req: Request, res: Response) => {
+app.get('/', async (_req: Request, res: Response) => {
   const eboooks: Author[] = await database.table('authors').select('*');
   res.json(eboooks);
 });
@@ -39,7 +39,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
   const parsedEbooksInputData = await parseCsv(req.file);
 
   const errors: ResponseDto['errors'] = [];
-  const ebooks: Ebook[] = [];
+  const ebooks: ResponseDto['ebooks'] = [];
 
   const promises = parsedEbooksInputData.map(async (book) => {
     try {
@@ -52,11 +52,15 @@ app.post('/upload', upload.single('file'), async (req, res) => {
       const table_no = exchangeRateData.rates[0].no;
       const rate = exchangeRateData.rates[0].mid;
       ebooks.push({
-        ...bookData.book,
-        exchange_rate: {
-          price_pln,
-          table_no,
+        name: bookData.author.name,
+        title: bookData.book.title,
+        curr: 'USD',
+        price: bookData.book.price_usd,
+        date: bookData.book.date.toISOString(),
+        fromNBP: {
           rate,
+          pricePLN: price_pln,
+          tableNo: table_no,
         },
       });
     } catch (error: any) {

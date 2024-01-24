@@ -5,7 +5,7 @@ USE onwelo;
 CREATE TABLE exchange_rates (
   id INT PRIMARY KEY,
   rate FLOAT,
-  price_pln FLOAT,
+  date DATE,
   table_no VARCHAR(255)
 );
 
@@ -19,6 +19,7 @@ CREATE TABLE ebooks (
   name INT,
   title VARCHAR(255),
   price_usd FLOAT,
+  price_pln: FLOAT,
   date DATE,
   exchange_rate INT,
   FOREIGN KEY (exchange_rate) REFERENCES exchange_rates(id)
