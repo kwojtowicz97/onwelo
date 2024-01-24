@@ -1,9 +1,9 @@
 import { URL, URLSearchParams } from 'url';
-import { InputData } from '../types/inputData';
+import { InputData } from '../dtos/inputData';
 import dotenv from 'dotenv';
-import { AppleApiResponse, Book } from '../types/appleResponse.dto';
-import { Author } from '../types/author';
-import { Ebook } from '../types/ebook';
+import { AppleApiResponse, Book } from '../dtos/appleResponse.dto';
+import { Author } from '../models/author';
+import { Ebook } from '../models/ebook';
 
 dotenv.config();
 

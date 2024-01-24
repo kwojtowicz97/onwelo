@@ -1,6 +1,6 @@
 import { Stream } from 'stream';
 import { parse } from 'csv-parse';
-import { InputData } from '../types/inputData';
+import { InputData } from '../dtos/inputData';
 
 const mapData = (data: string[][]): InputData[] => {
   return data.map((row) => {

@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { NbpApiResponse } from '../types/nbpResponse.dto';
+import { NbpApiResponse } from '../dtos/nbpResponse.dto';
 
 dotenv.config();
 

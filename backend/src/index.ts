@@ -2,11 +2,13 @@ import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import knex from 'knex';
 import connections from './database/knexfile';
-import { Author } from './types/author';
+import { Author } from './models/author';
 import multer from 'multer';
 import { parseCsv } from './utlis/parseCsv';
 import { getBooksData } from './utlis/getBooksData';
 import { getExchangeRateData } from './utlis/getExchangeRates';
+import { Book } from './dtos/appleResponse.dto';
+import { Ebook } from './models/ebook';
 
 dotenv.config();
 
@@ -36,19 +38,35 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     return res.status(400).json({ error: 'File is not CSV' });
   }
 
-  const books = await parseCsv(req.file);
+  const parsedEbooksInputData = await parseCsv(req.file);
 
-  books.forEach(async (book) => {
+  const ebooks: Ebook[] = [];
+
+  parsedEbooksInputData.forEach(async (book) => {
     try {
       const bookData = await getBooksData(book);
-      const exchangeRate = await getExchangeRateData(bookData.book.date);
-      console.log(bookData.book.date, exchangeRate);
+      const exchangeRateData = await getExchangeRateData(bookData.book.date);
+
+      const price_pln = +(
+        exchangeRateData.rates[0].mid * bookData.book.price_usd
+      ).toFixed(2);
+      const table_no = exchangeRateData.rates[0].no;
+      const rate = exchangeRateData.rates[0].mid;
+
+      ebooks.push({
+        ...bookData.book,
+        exchange_rate: {
+          price_pln,
+          table_no,
+          rate,
+        },
+      });
     } catch (error) {
-      console.log;
+      console.log(error);
     }
   });
 
-  res.json(books);
+  res.json(ebooks);
 });
 
 app.listen(port, () => {
