@@ -11,6 +11,7 @@ CREATE TABLE exchange_rates (
 
 CREATE TABLE authors (
   id INT PRIMARY KEY AUTO_INCREMENT,
+  apple_id: INT
   name VARCHAR(255)
 );
 

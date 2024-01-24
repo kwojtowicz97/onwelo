@@ -1,16 +1,12 @@
 import { URLSearchParams } from 'url';
 import { InputData } from '../dtos/inputData';
 import dotenv from 'dotenv';
-import { AppleApiResponse } from '../dtos/appleResponse.dto';
-import { Author } from '../models/author';
-import { Ebook } from '../models/ebook';
+import { AppleApiResponse, Book } from '../dtos/appleResponse.dto';
 
 dotenv.config();
 
-export const getBooksData = async (
-  book: InputData
-): Promise<{ book: Omit<Ebook, 'exchange_rate' | 'id'>; author: Author }> => {
-  const baseUrl = process.env.APPLE_API!;
+export const getBooksData = async (book: InputData): Promise<Book> => {
+  const baseUrl = process.env.APPLE_API;
   const searchParams = new URLSearchParams();
   searchParams.append('term', `${book.name} ${book.title}`);
   searchParams.append('media', 'ebook');
@@ -28,13 +24,5 @@ export const getBooksData = async (
 
   const bookData = data.results[0];
 
-  return {
-    book: {
-      date: new Date(bookData.releaseDate),
-      name: book.name,
-      title: book.title,
-      price_usd: bookData.price,
-    },
-    author: { name: bookData.artistName, id: bookData.artistId },
-  };
+  return bookData;
 };

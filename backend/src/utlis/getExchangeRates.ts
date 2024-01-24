@@ -5,7 +5,9 @@ import { ExchangeRate } from '../models/exchangeRate';
 
 dotenv.config();
 
-export const getExchangeRateData = async (date: Date) => {
+export const getExchangeRateData = async (
+  date: string
+): Promise<ExchangeRate> => {
   const clonedDate = new Date(date);
 
   const day = clonedDate.getDay();
@@ -25,7 +27,7 @@ export const getExchangeRateData = async (date: Date) => {
     return savedExchangeRate;
   }
 
-  const baseUrl = process.env.NBP_API!;
+  const baseUrl = process.env.NBP_API;
   const response = await fetch(
     baseUrl + clonedDate.toISOString().split('T')[0] + '/?format=json'
   );
@@ -45,7 +47,8 @@ export const getExchangeRateData = async (date: Date) => {
     table_no: data.rates[0].no,
   };
 
-  const savedModel = await database('exchange_rates').insert(model, '*');
-
+  const savedModel: ExchangeRate = (
+    await database('exchange_rates').insert(model, '*')
+  )[0];
   return savedModel;
 };

@@ -6,7 +6,12 @@ import multer from 'multer';
 import { parseCsv } from './utlis/parseCsv';
 
 import { database } from './database/db';
-import { fetchBookAndExchangeRateData } from './utlis/fetchBookAndExchangeRateData';
+import {
+  ErrorResponse,
+  SuccessResponse,
+  fetchBookAndExchangeRateData,
+} from './utlis/fetchBookAndExchangeRateData';
+import { saveAuthorToDatabase } from './utlis/saveAuthorToDatabase';
 
 dotenv.config();
 
@@ -42,8 +47,19 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
   const results = await Promise.all(promises);
 
-  const errors = results.filter((result) => !result.ok);
-  const ebooks = results.filter((result) => result.ok);
+  const errors = results.filter((result) => !result.ok) as ErrorResponse[];
+  const ebooks = results.filter((result) => result.ok) as SuccessResponse[];
+
+  const savedAuthors = await Promise.all(
+    ebooks.map((ebook) =>
+      saveAuthorToDatabase({
+        apple_id: ebook.bookData?.artistId,
+        name: ebook.bookData?.artistName,
+      })
+    )
+  );
+
+  console.log(savedAuthors);
 
   res.json({ errors, ebooks });
 });
