@@ -7,8 +7,8 @@ import multer from 'multer';
 import { parseCsv } from './utlis/parseCsv';
 import { getBooksData } from './utlis/getBooksData';
 import { getExchangeRateData } from './utlis/getExchangeRates';
-import { Book } from './dtos/appleResponse.dto';
 import { Ebook } from './models/ebook';
+import { ResponseDto } from './dtos/response.dto';
 
 dotenv.config();
 
@@ -40,9 +40,10 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
   const parsedEbooksInputData = await parseCsv(req.file);
 
+  const errors: ResponseDto['errors'] = [];
   const ebooks: Ebook[] = [];
 
-  parsedEbooksInputData.forEach(async (book) => {
+  const promises = parsedEbooksInputData.map(async (book) => {
     try {
       const bookData = await getBooksData(book);
       const exchangeRateData = await getExchangeRateData(bookData.book.date);
@@ -52,7 +53,6 @@ app.post('/upload', upload.single('file'), async (req, res) => {
       ).toFixed(2);
       const table_no = exchangeRateData.rates[0].no;
       const rate = exchangeRateData.rates[0].mid;
-
       ebooks.push({
         ...bookData.book,
         exchange_rate: {
@@ -61,12 +61,23 @@ app.post('/upload', upload.single('file'), async (req, res) => {
           rate,
         },
       });
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      errors.push({
+        title: book.title,
+        author: book.name,
+        error: error.message,
+      });
     }
   });
 
-  res.json(ebooks);
+  await Promise.all(promises);
+
+  const response: ResponseDto = {
+    errors,
+    ebooks,
+  };
+
+  res.json(response);
 });
 
 app.listen(port, () => {

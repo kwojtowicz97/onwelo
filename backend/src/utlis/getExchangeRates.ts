@@ -4,9 +4,18 @@ import { NbpApiResponse } from '../dtos/nbpResponse.dto';
 dotenv.config();
 
 export const getExchangeRateData = async (date: Date) => {
+  const clonedDate = new Date(date);
+
+  const day = clonedDate.getDay();
+
+  if (day === 0 || day === 6) {
+    const daysToSubtract = day === 6 ? 1 : 2;
+    clonedDate.setDate(clonedDate.getDate() - daysToSubtract);
+  }
+
   const baseUrl = process.env.NBP_API!;
   const response = await fetch(
-    baseUrl + date.toISOString().split('T')[0] + '/?format=json'
+    baseUrl + clonedDate.toISOString().split('T')[0] + '/?format=json'
   );
 
   if (response.status === 404) {
