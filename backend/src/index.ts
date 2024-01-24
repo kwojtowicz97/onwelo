@@ -6,6 +6,7 @@ import { Author } from './types/author';
 import multer from 'multer';
 import { parseCsv } from './utlis/parseCsv';
 import { getBooksData } from './utlis/getBooksData';
+import { getExchangeRateData } from './utlis/getExchangeRates';
 
 dotenv.config();
 
@@ -39,7 +40,9 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
   books.forEach(async (book) => {
     try {
-      console.log(await getBooksData(book));
+      const bookData = await getBooksData(book);
+      const exchangeRate = await getExchangeRateData(bookData.book.date);
+      console.log(bookData.book.date, exchangeRate);
     } catch (error) {
       console.log;
     }
