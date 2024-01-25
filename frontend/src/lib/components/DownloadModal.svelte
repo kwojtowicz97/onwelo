@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { flattenObject } from '$lib/utils/flattenObject';
 	import { convertObjectToCSV, downloadCSV } from '$lib/utils/generateCSV';
 	import { convertObjectToJSON, downloadJSON } from '$lib/utils/generateJSON';
 	import type { Ebook } from '../../app';
@@ -13,7 +14,9 @@
 		const generator = isCSV ? convertObjectToCSV : convertObjectToJSON;
 		const downloader = isCSV ? downloadCSV : downloadJSON;
 		const extenstion = isCSV ? '.csv' : '.json';
-		const generatedData = generator(ebooksData);
+		const generatedData = generator(
+			isCSV ? ebooksData.map((ebook) => flattenObject(ebook)) : ebooksData
+		);
 		downloader(generatedData, 'ebooks' + extenstion);
 	};
 </script>

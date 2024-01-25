@@ -5,6 +5,7 @@
 
 	let isLoadind = false;
 	let data: UploadResponseDto | null = null;
+	let file: File | null;
 
 	const submitHandler = async (event: Event) => {
 		isLoadind = true;
@@ -18,7 +19,6 @@
 				body: formData
 			});
 			data = await response.json();
-			console.log(data);
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -32,6 +32,7 @@
 		<form on:submit={submitHandler} class="w-50">
 			<label for="" class="form-label">Select file</label>
 			<input
+				bind:value={file}
 				type="file"
 				class="form-control"
 				name="file"
@@ -44,19 +45,17 @@
 			<div id="fileHelpId" class="form-text">
 				Select .csv file with ebooks titles and authors to get prices.
 			</div>
-			<button disabled={isLoadind} type="submit" class="btn btn-primary mt-3 text-center">
+			<button disabled={isLoadind || !file} type="submit" class="btn btn-primary mt-3 text-center">
 				{#if isLoadind}
 					<div class="spinner-border spinner-border-sm" role="status"></div>
 				{/if}
-				Button
+				Submit
 			</button>
 		</form>
 	</div>
 {:else}
 	<h1 class="mt-5">Results ({data.ebooks.length})</h1>
-	<div class="table-responsive">
-		<EbooksTable {data} />
-	</div>
+	<EbooksTable {data} />
 
 	<h1 class="mt-5">Problems ({data.errors.length})</h1>
 	<div class="table-responsive">
