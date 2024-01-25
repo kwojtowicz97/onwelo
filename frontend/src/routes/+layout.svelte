@@ -38,11 +38,6 @@
 								>Browse Ebooks</a
 							>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link" class:active={pathname === '/authors'} href="/authors"
-								>Browse Authors</a
-							>
-						</li>
 					</ul>
 				</div>
 			</div>

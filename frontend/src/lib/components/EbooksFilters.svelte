@@ -1,6 +1,6 @@
 <p>
 	<button
-		class="btn btn-primary"
+		class="btn btn-secondary"
 		type="button"
 		data-bs-toggle="collapse"
 		data-bs-target="#collapseExample"
