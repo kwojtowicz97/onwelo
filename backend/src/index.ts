@@ -50,46 +50,54 @@ app.get('/ebooks', async (req: Request, res: Response) => {
 });
 
 app.post('/ebooks', upload.single('file'), async (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file provided' });
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file provided' });
+    }
+
+    if (!req.file.mimetype.includes('csv')) {
+      return res.status(400).json({ error: 'File is not CSV' });
+    }
+
+    const parsedEbooksInputData = await parseCsv(req.file);
+
+    const promises = parsedEbooksInputData.map((book) =>
+      fetchBookAndExchangeRateData(book)
+    );
+
+    const results = await Promise.all(promises);
+
+    const errors = results.filter((result) => !result.ok) as ErrorResponse[];
+    const ebooks = results.filter((result) => result.ok) as SuccessResponse[];
+
+    for (const ebook of ebooks) {
+      await saveToDatabase(ebook);
+    }
+
+    const response: ResponseDto = {
+      errors,
+      ebooks: ebooks.map((ebook) => ({
+        name: ebook.bookData.artistName,
+        title: ebook.bookData.trackName,
+        curr: ebook.bookData.currency,
+        price: ebook.bookData.price,
+        date: ebook.bookData.releaseDate,
+        fromNBP: {
+          rate: ebook.exchangeRateData.rate,
+          pricePLN: ebook.exchangeRateData.rate * ebook.bookData.price,
+          tableNo: ebook.exchangeRateData.table_no,
+        },
+      })),
+    };
+
+    res.json(response);
+  } catch (error: any) {
+    res.status(500).json({
+      status: 500,
+      message:
+        error.message || error || 'Something went wrong. Try again later.',
+    });
   }
-
-  if (!req.file.mimetype.includes('csv')) {
-    return res.status(400).json({ error: 'File is not CSV' });
-  }
-
-  const parsedEbooksInputData = await parseCsv(req.file);
-
-  const promises = parsedEbooksInputData.map((book) =>
-    fetchBookAndExchangeRateData(book)
-  );
-
-  const results = await Promise.all(promises);
-
-  const errors = results.filter((result) => !result.ok) as ErrorResponse[];
-  const ebooks = results.filter((result) => result.ok) as SuccessResponse[];
-
-  for (const ebook of ebooks) {
-    await saveToDatabase(ebook);
-  }
-
-  const response: ResponseDto = {
-    errors,
-    ebooks: ebooks.map((ebook) => ({
-      name: ebook.bookData.artistName,
-      title: ebook.bookData.trackName,
-      curr: ebook.bookData.currency,
-      price: ebook.bookData.price,
-      date: ebook.bookData.releaseDate,
-      fromNBP: {
-        rate: ebook.exchangeRateData.rate,
-        pricePLN: ebook.exchangeRateData.rate * ebook.bookData.price,
-        tableNo: ebook.exchangeRateData.table_no,
-      },
-    })),
-  };
-
-  res.json(response);
 });
 
 app.listen(port, () => {

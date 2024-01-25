@@ -34,8 +34,6 @@ export const getEbooks = async (query: Record<string, unknown>) => {
       : undefined;
   }
 
-  console.log({ dateMin, dateMax, title });
-
   return await database('ebooks')
     .select('*')
     .leftJoin('authors', 'ebooks.artist_id', 'authors.id')

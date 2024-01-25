@@ -8,7 +8,7 @@ dotenv.config();
 export const getBooksData = async (book: InputData): Promise<Book> => {
   const baseUrl = process.env.APPLE_API;
   const searchParams = new URLSearchParams();
-  searchParams.append('term', `${book.title}`.replace(' ', '+'));
+  searchParams.append('term', `${book.title}`.replaceAll(' ', '+'));
   searchParams.append('media', 'ebook');
   searchParams.append('limit', '1');
   const response = await fetch(`${baseUrl}?${searchParams.toString()}`);
@@ -19,7 +19,7 @@ export const getBooksData = async (book: InputData): Promise<Book> => {
   const data: AppleApiResponse = await response.json();
 
   if (data.resultCount === 0) {
-    throw new Error('No results');
+    throw new Error('No Apple API results.');
   }
 
   const bookData = data.results[0];

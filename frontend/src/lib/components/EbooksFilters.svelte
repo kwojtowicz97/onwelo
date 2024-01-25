@@ -84,7 +84,7 @@
 	<div class="card card-body">
 		<form on:submit={submitHandler} class="row g-3">
 			<div class="col-md-6">
-				<label for="name" class="form-label">Name</label>
+				<label for="name" class="form-label">Author</label>
 				<input
 					bind:value={name}
 					type="text"

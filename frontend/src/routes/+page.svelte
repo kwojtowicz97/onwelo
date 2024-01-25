@@ -7,6 +7,7 @@
 	let isLoadind = false;
 	let data: UploadResponseDto | null = null;
 	let file: File | null;
+	let errorMessage: string | undefined;
 
 	const submitHandler = async (event: Event) => {
 		isLoadind = true;
@@ -19,9 +20,13 @@
 				method: 'POST',
 				body: formData
 			});
-			data = await response.json();
-		} catch (error) {
-			console.log(error);
+			if (!response.ok) {
+				errorMessage = (await response.json()).message;
+			} else {
+				data = await response.json();
+			}
+		} catch (error: any) {
+			errorMessage = error?.message || 'Something went wrong. Try again later.';
 		} finally {
 			isLoadind = false;
 		}
@@ -52,6 +57,9 @@
 				{/if}
 				Submit
 			</button>
+			{#if errorMessage}
+				<div class="alert alert-danger mt-3" role="alert">{errorMessage}</div>
+			{/if}
 		</form>
 	</div>
 {:else}

@@ -30,10 +30,10 @@
 					<td>{row.name}</td>
 					<td>{row.title}</td>
 					<td>{row.curr}</td>
-					<td>${row.price}</td>
+					<td>{row.price ? `$${row.price}` : 'Free'}</td>
 					<td>{new Date(row.date).toLocaleDateString('en-US', dateOptions)}</td>
 					<td>{row.fromNBP.rate}</td>
-					<td>{row.fromNBP.pricePLN.toFixed(2)}zł</td>
+					<td>{row.fromNBP.pricePLN ? `${row.fromNBP.pricePLN.toFixed(2)}zł` : 'Free'}</td>
 					<td>{row.fromNBP.tableNo}</td>
 				</tr>
 			{/each}

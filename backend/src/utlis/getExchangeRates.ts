@@ -34,11 +34,11 @@ export const getExchangeRateData = async (
   );
 
   if (response.status === 404) {
-    throw new Error('No results');
+    throw new Error('No NBP API results.');
   }
 
   if (!response.ok) {
-    throw new Error('NBP API is not available');
+    throw new Error('NBP API is not available.');
   }
   const data: NbpApiResponse = await response.json();
 

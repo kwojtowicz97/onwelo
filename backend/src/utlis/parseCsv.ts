@@ -20,7 +20,9 @@ export const parseCsv = (file: Express.Multer.File) => {
       .pipe(parse({ delimiter: ',', quote: '"' }))
       .on('data', (data: string[]) => {
         if (data.length !== 2) {
-          return reject(new Error('CSV file must have 2 columns'));
+          return reject(
+            new Error('CSV file must only have "author" and title "columns".')
+          );
         }
         results.push(data);
       })
