@@ -1,0 +1,29 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+table exchange_rates {
+  id int [primary key, increment]
+  rate float
+  date date
+  table_no varchar(255)
+}
+
+table authors {
+  id int [primary key, increment]
+  apple_id bigint
+  name varchar(255)
+}
+
+table ebooks {
+  id int [primary key, increment]
+  apple_id bigint
+  artist_id bigint [ref: > authors.id]
+  title varchar(255)
+  currency varchar(255)
+  price_usd float
+  price_pln float
+  relase_date date
+  exchange_rate_id int [ref: > exchange_rates.id]
+}
+
+
