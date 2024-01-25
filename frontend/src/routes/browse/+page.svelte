@@ -2,10 +2,9 @@
 	import DownloadModal from '$lib/components/DownloadModal.svelte';
 	import EbooksFilters from '$lib/components/EbooksFilters.svelte';
 	import EbooksTable from '$lib/components/EbooksTable.svelte';
-	import type { UploadResponseDto } from '$lib/dtos/uploadResponse.js';
 
 	export let data;
-	const tableData: UploadResponseDto = {
+	$: tableData = {
 		ebooks: data.ebooksData.map((ebook) => ({
 			...ebook
 		})),

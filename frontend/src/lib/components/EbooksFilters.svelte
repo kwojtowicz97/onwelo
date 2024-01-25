@@ -1,21 +1,23 @@
 <script lang="ts">
-	import { goto, invalidate } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 
 	const searchParams = $page.url.searchParams;
 
-	let name = searchParams.get('name') || undefined;
-	let title = searchParams.get('title') || undefined;
+	$: name = searchParams.get('name') || undefined;
+	$: title = searchParams.get('title') || undefined;
 
 	const priceusd = searchParams.get('priceusd')?.split(',');
-	let priceMinUsd = priceusd?.at(0) ? priceusd[0] : undefined;
-	let priceMaxUsd = priceusd?.at(1) ? priceusd[1] : undefined;
+	$: priceMinUsd = priceusd?.at(0) ? priceusd[0] : undefined;
+	$: priceMaxUsd = priceusd?.at(1) ? priceusd[1] : undefined;
 
 	const pricepln = searchParams.get('pricepln')?.split(',');
-	let priceMinPln = pricepln?.at(0) ? pricepln[0] : undefined;
-	let priceMaxPln = pricepln?.at(1) ? pricepln[1] : undefined;
+	$: priceMinPln = pricepln?.at(0) ? pricepln[0] : undefined;
+	$: priceMaxPln = pricepln?.at(1) ? pricepln[1] : undefined;
 
 	const date = searchParams.get('date')?.split(',');
+
+	let hideButton: HTMLButtonElement;
 
 	let dateMin: string | undefined =
 		date && date[0] ? new Date(+date[0]).toISOString().split('T')[0] : undefined;
@@ -24,7 +26,7 @@
 
 	const submitHandler = async (e: Event) => {
 		e.preventDefault();
-		const searchParams = $page.url.searchParams;
+		const searchParams = new URLSearchParams($page.url.searchParams.toString());
 		if (name) {
 			searchParams.set('name', name);
 		}
@@ -49,13 +51,25 @@
 				`${dateMin ? new Date(dateMin).getTime() : ''},${dateMax ? new Date(dateMax).getTime() : ''}`
 			);
 		}
-		invalidate('browse:filters');
-		await goto(`?${searchParams.toString()}`);
+		goto(`?${searchParams.toString()}`, { noScroll: true });
+		hideButton.click();
+	};
+
+	const resetFilters = () => {
+		name = undefined;
+		title = undefined;
+		priceMinUsd = undefined;
+		priceMaxUsd = undefined;
+		priceMinPln = undefined;
+		priceMaxPln = undefined;
+		goto(`?`);
+		hideButton.click();
 	};
 </script>
 
 <p>
 	<button
+		bind:this={hideButton}
 		class="btn btn-secondary"
 		type="button"
 		data-bs-toggle="collapse"
@@ -151,13 +165,8 @@
 			</div>
 			<div class="col-md-6 mt-4">
 				<button type="submit" class="btn btn-primary">Apply filters</button>
-				<button
-					data-bs-toggle="collapse"
-					data-bs-target="#collapseExample"
-					aria-expanded="false"
-					aria-controls="collapseExample"
-					type="submit"
-					class="btn btn-secondary">Reset filters</button
+				<button on:click={resetFilters} type="button" class="btn btn-secondary"
+					>Reset filters</button
 				>
 			</div>
 		</form>

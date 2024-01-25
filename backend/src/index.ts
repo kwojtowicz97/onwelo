@@ -32,8 +32,8 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 
-app.get('/ebooks', async (_req: Request, res: Response) => {
-  const eboooks: (Ebook & Author & ExchangeRate)[] = await getEbooks();
+app.get('/ebooks', async (req: Request, res: Response) => {
+  const eboooks: (Ebook & Author & ExchangeRate)[] = await getEbooks(req.query);
   const response: ResponseDto['ebooks'] = eboooks.map((ebook) => ({
     title: ebook.title,
     name: ebook.name,
