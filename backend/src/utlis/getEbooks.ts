@@ -58,10 +58,10 @@ export const getEbooks = async (query: Record<string, unknown>) => {
         qb.where('price_usd', '<=', priceUsdMax);
       }
       if (dateMin) {
-        qb.where('ebooks.date', '>=', dateMin);
+        qb.where('ebooks.relase_date', '>=', dateMin);
       }
       if (dateMax) {
-        qb.where('ebooks.date', '<=', dateMax);
+        qb.where('ebooks.relase_date', '<=', dateMax);
       }
     });
 };

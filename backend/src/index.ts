@@ -34,7 +34,6 @@ app.use(cors());
 
 app.get('/ebooks', async (req: Request, res: Response) => {
   const eboooks: (Ebook & Author & ExchangeRate)[] = await getEbooks(req.query);
-  console.log(eboooks);
 
   const response: ResponseDto['ebooks'] = eboooks.map((ebook) => ({
     title: ebook.title,

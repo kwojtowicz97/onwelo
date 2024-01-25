@@ -19,37 +19,45 @@
 
 	let hideButton: HTMLButtonElement;
 
-	let dateMin: string | undefined =
-		date && date[0] ? new Date(+date[0]).toISOString().split('T')[0] : undefined;
-	let dateMax: string | undefined =
-		date && date[1] ? new Date(+date[1]).toISOString().split('T')[0] : undefined;
+	$: dateMin = date && date[0] ? new Date(+date[0]).toISOString().split('T')[0] : undefined;
+	$: dateMax = date && date[1] ? new Date(+date[1]).toISOString().split('T')[0] : undefined;
 
 	const submitHandler = async (e: Event) => {
 		e.preventDefault();
 		const searchParams = new URLSearchParams($page.url.searchParams.toString());
 		if (name) {
 			searchParams.set('name', name);
+		} else {
+			searchParams.delete('name');
 		}
 		if (title) {
 			searchParams.set('title', title);
+		} else {
+			searchParams.delete('title');
 		}
-		if (priceMinUsd || priceMaxUsd) {
+		if (priceMinUsd !== undefined || priceMaxUsd !== undefined) {
 			searchParams.set(
 				'priceusd',
-				`${priceMinUsd ? priceMinUsd : ''},${priceMaxUsd ? priceMaxUsd : ''}`
+				`${priceMinUsd !== undefined ? priceMinUsd : ''},${priceMaxUsd !== undefined ? priceMaxUsd : ''}`
 			);
+		} else {
+			searchParams.delete('priceusd');
 		}
-		if (priceMinPln || priceMaxPln) {
+		if (priceMinPln !== undefined || priceMaxPln !== undefined) {
 			searchParams.set(
 				'pricepln',
-				`${priceMinPln ? priceMinPln : ''},${priceMaxPln ? priceMaxPln : ''}`
+				`${priceMinPln !== undefined ? priceMinPln : ''},${priceMaxPln !== undefined ? priceMaxPln : ''}`
 			);
+		} else {
+			searchParams.delete('pricepln');
 		}
 		if (dateMin || dateMax) {
 			searchParams.set(
 				'date',
 				`${dateMin ? new Date(dateMin).getTime() : ''},${dateMax ? new Date(dateMax).getTime() : ''}`
 			);
+		} else {
+			searchParams.delete('date');
 		}
 		goto(`?${searchParams.toString()}`, { noScroll: true });
 		hideButton.click();
@@ -62,6 +70,8 @@
 		priceMaxUsd = undefined;
 		priceMinPln = undefined;
 		priceMaxPln = undefined;
+		dateMin = undefined;
+		dateMax = undefined;
 		goto(`?`);
 		hideButton.click();
 	};
