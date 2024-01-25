@@ -18,7 +18,7 @@ CREATE TABLE authors (
 CREATE TABLE ebooks (
   id INT PRIMARY KEY AUTO_INCREMENT,
   apple_id BIGINT,
-  artist_id BIGINT,
+  artist_id INT,
   title VARCHAR(255),
   currency VARCHAR(255),
   price_usd FLOAT,
