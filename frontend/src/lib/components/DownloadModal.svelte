@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { PUBLIC_BACKEND_URL } from '$env/static/public';
 	import { flattenObject } from '$lib/utils/flattenObject';
 	import { convertObjectToCSV, downloadCSV } from '$lib/utils/generateCSV';
 	import { convertObjectToJSON, downloadJSON } from '$lib/utils/generateJSON';
@@ -9,14 +10,24 @@
 
 	let scope: 'everything' | 'filtered' = 'everything';
 	let format: 'json' | 'csv' = 'json';
+	let errorMessage: string | undefined;
 
-	const downloadHandler = () => {
+	const downloadHandler = async () => {
+		let dataToDownload = [...ebooksData];
+		if (scope === 'everything') {
+			const response = await fetch(`${PUBLIC_BACKEND_URL}/ebooks`);
+			if (!response.ok) {
+				errorMessage = (await response.json()).message || 'Something went wrong. Try again later.';
+			} else {
+				dataToDownload = await response.json();
+			}
+		}
 		const isCSV = format === 'csv';
 		const generator = isCSV ? convertObjectToCSV : convertObjectToJSON;
 		const downloader = isCSV ? downloadCSV : downloadJSON;
 		const extenstion = isCSV ? '.csv' : '.json';
 		const generatedData = generator(
-			isCSV ? ebooksData.map((ebook) => flattenObject(ebook)) : ebooksData
+			isCSV ? dataToDownload.map((ebook) => flattenObject(ebook)) : dataToDownload
 		);
 		downloader(generatedData, 'ebooks' + extenstion);
 	};

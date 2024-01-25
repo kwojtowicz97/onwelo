@@ -6,7 +6,7 @@ export type UploadResponseDto = {
 		curr: string;
 		price: number;
 		relaseDate: string;
-		fromNBP: {
+		fromNBP?: {
 			rate: number;
 			pricePLN: number;
 			tableNo: string;
