@@ -25,12 +25,6 @@ CREATE TABLE ebooks (
   price_pln FLOAT,
   relase_date DATE,
   exchange_rate_id INT,
-  FOREIGN KEY (exchange_rate_id) REFERENCES exchange_rates(id)
-);
-
-CREATE TABLE ebooks_authors (
-  ebook_id INT,
-  author_id INT,
-  FOREIGN KEY (ebook_id) REFERENCES ebooks(id),
-  FOREIGN KEY (author_id) REFERENCES authors(id)
+  FOREIGN KEY (exchange_rate_id) REFERENCES exchange_rates(id),
+  FOREIGN KEY (artist_id) REFERENCES authors(id)
 );

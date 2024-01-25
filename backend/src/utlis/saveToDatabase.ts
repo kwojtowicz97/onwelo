@@ -54,10 +54,5 @@ export const saveToDatabase = async (data: SuccessResponse) => {
 
   const savedEbookId = (await database('ebooks').insert(model, '*'))[0];
 
-  await database('ebooks_authors').insert({
-    ebook_id: savedEbookId,
-    author_id: author.id,
-  });
-
   return savedEbookId;
 };
