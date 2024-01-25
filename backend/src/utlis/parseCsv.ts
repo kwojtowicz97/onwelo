@@ -21,7 +21,9 @@ export const parseCsv = (file: Express.Multer.File) => {
       .on('data', (data: string[]) => {
         if (data.length !== 2) {
           return reject(
-            new Error('CSV file must only have "author" and title "columns".')
+            new Error(
+              `CSV file must only have "author" and title "columns". Provided ${data.length} columns.`
+            )
           );
         }
         results.push(data);

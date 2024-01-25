@@ -5,8 +5,8 @@ export type ResponseDto = {
     title: string;
     curr: string;
     price: number;
-    date: string;
-    fromNBP: {
+    relaseDate: string;
+    fromNBP?: {
       rate: number;
       pricePLN: number;
       tableNo: string;

@@ -34,12 +34,14 @@ app.use(cors());
 
 app.get('/ebooks', async (req: Request, res: Response) => {
   const eboooks: (Ebook & Author & ExchangeRate)[] = await getEbooks(req.query);
+  console.log(eboooks);
+
   const response: ResponseDto['ebooks'] = eboooks.map((ebook) => ({
     title: ebook.title,
     name: ebook.name,
     price: ebook.price_usd,
     curr: ebook.currency,
-    date: ebook.date.toISOString(),
+    relaseDate: ebook.relase_date.toISOString(),
     fromNBP: {
       pricePLN: ebook.price_pln,
       rate: ebook.rate,
@@ -81,12 +83,14 @@ app.post('/ebooks', upload.single('file'), async (req, res) => {
         title: ebook.bookData.trackName,
         curr: ebook.bookData.currency,
         price: ebook.bookData.price,
-        date: ebook.bookData.releaseDate,
-        fromNBP: {
-          rate: ebook.exchangeRateData.rate,
-          pricePLN: ebook.exchangeRateData.rate * ebook.bookData.price,
-          tableNo: ebook.exchangeRateData.table_no,
-        },
+        relaseDate: ebook.bookData.releaseDate,
+        ...(ebook.exchangeRateData && {
+          fromNBP: {
+            rate: ebook.exchangeRateData.rate,
+            pricePLN: ebook.exchangeRateData.rate * ebook.bookData.price,
+            tableNo: ebook.exchangeRateData.table_no,
+          },
+        }),
       })),
     };
 

@@ -7,7 +7,7 @@ import { getExchangeRateData } from './getExchangeRates';
 export type SuccessResponse = {
   ok: true;
   bookData: Book;
-  exchangeRateData: ExchangeRate;
+  exchangeRateData: ExchangeRate | null;
 };
 
 export type ErrorResponse = {
@@ -22,7 +22,11 @@ export const fetchBookAndExchangeRateData = async (
 ): Promise<SuccessResponse | ErrorResponse> => {
   try {
     const bookData = await getBooksData(book);
-    const exchangeRateData = await getExchangeRateData(bookData.releaseDate);
+    let exchangeRateData: null | ExchangeRate = null;
+
+    if (bookData.price !== 0) {
+      exchangeRateData = await getExchangeRateData(bookData.releaseDate);
+    }
 
     return {
       ok: true,

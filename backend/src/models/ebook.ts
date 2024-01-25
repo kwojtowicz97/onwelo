@@ -6,6 +6,6 @@ export type Ebook = {
   currency: string;
   price_usd: number;
   price_pln: number;
-  date: Date;
-  exchange_rate_id: number;
+  relase_date: Date;
+  exchange_rate_id: number | null;
 };

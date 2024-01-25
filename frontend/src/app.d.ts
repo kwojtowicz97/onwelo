@@ -15,8 +15,8 @@ type Ebook = {
 	name: string;
 	price: number;
 	curr: string;
-	date: string; // Assuming this is a string representation of a date
-	fromNBP: {
+	relaseDate: string;
+	fromNBP?: {
 		pricePLN: number;
 		rate: number;
 		tableNo: string;

@@ -23,7 +23,7 @@ CREATE TABLE ebooks (
   currency VARCHAR(255),
   price_usd FLOAT,
   price_pln FLOAT,
-  date DATE,
+  relase_date DATE,
   exchange_rate_id INT,
   FOREIGN KEY (exchange_rate_id) REFERENCES exchange_rates(id)
 );

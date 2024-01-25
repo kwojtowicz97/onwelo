@@ -36,11 +36,10 @@ export const saveToDatabase = async (data: SuccessResponse) => {
     return existingEbook;
   }
 
-  if (!data.exchangeRateData) {
-    throw new Error('No exchange rate data');
-  }
-
-  const price_pln = data.bookData.price * data.exchangeRateData.rate;
+  const price_pln =
+    data.bookData.price && data.exchangeRateData
+      ? data.bookData.price * data.exchangeRateData.rate
+      : 0;
 
   const model: Ebook = {
     artist_id: author.id,
@@ -48,8 +47,8 @@ export const saveToDatabase = async (data: SuccessResponse) => {
     price_usd: data.bookData.price,
     price_pln,
     currency: data.bookData.currency,
-    date: new Date(data.bookData.releaseDate),
-    exchange_rate_id: data.exchangeRateData.id,
+    relase_date: new Date(data.bookData.releaseDate),
+    exchange_rate_id: data.exchangeRateData?.id || null,
     apple_id: data.bookData.trackId,
   };
 
