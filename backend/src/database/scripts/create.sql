@@ -20,6 +20,7 @@ CREATE TABLE ebooks (
   apple_id BIGINT,
   artist_id BIGINT,
   title VARCHAR(255),
+  currency VARCHAR(255),
   price_usd FLOAT,
   price_pln FLOAT,
   date DATE,

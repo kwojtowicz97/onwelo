@@ -51,6 +51,7 @@ export const saveToDatabase = async (data: SuccessResponse) => {
     title: data.bookData.trackName,
     price_usd: data.bookData.price,
     price_pln,
+    currency: data.bookData.currency,
     date: new Date(data.bookData.releaseDate),
     exchange_rate_id: data.exchangeRateData.id,
     apple_id: data.bookData.trackId,

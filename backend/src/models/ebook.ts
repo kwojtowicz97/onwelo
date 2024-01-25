@@ -3,6 +3,7 @@ export type Ebook = {
   apple_id: number;
   artist_id: number;
   title: string;
+  currency: string;
   price_usd: number;
   price_pln: number;
   date: Date;

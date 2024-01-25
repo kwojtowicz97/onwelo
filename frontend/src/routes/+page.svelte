@@ -13,7 +13,7 @@
 			const file = (event.target as HTMLFormElement).file.files[0];
 			const formData = new FormData();
 			formData.append('file', file);
-			const response = await fetch(`${PUBLIC_BACKEND_URL}/upload`, {
+			const response = await fetch(`${PUBLIC_BACKEND_URL}/ebooks`, {
 				method: 'POST',
 				body: formData
 			});

@@ -14,6 +14,9 @@ import {
 } from './utlis/fetchBookAndExchangeRateData';
 import { saveToDatabase } from './utlis/saveToDatabase';
 import { ResponseDto } from './dtos/response.dto';
+import { getEbooks } from './utlis/getEbooks';
+import { Ebook } from './models/ebook';
+import { ExchangeRate } from './models/exchangeRate';
 
 dotenv.config();
 
@@ -29,12 +32,24 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 
-app.get('/', async (_req: Request, res: Response) => {
-  const eboooks: Author[] = await database.table('authors').select('*');
-  res.json(eboooks);
+app.get('/ebooks', async (_req: Request, res: Response) => {
+  const eboooks: (Ebook & Author & ExchangeRate)[] = await getEbooks();
+  const response: ResponseDto['ebooks'] = eboooks.map((ebook) => ({
+    title: ebook.title,
+    name: ebook.name,
+    price: ebook.price_usd,
+    curr: ebook.currency,
+    date: ebook.date.toISOString(),
+    fromNBP: {
+      pricePLN: ebook.price_pln,
+      rate: ebook.rate,
+      tableNo: ebook.table_no,
+    },
+  }));
+  res.json(response);
 });
 
-app.post('/upload', upload.single('file'), async (req, res) => {
+app.post('/ebooks', upload.single('file'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file provided' });
   }

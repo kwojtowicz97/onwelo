@@ -10,4 +10,17 @@ declare global {
 	}
 }
 
-export {};
+type Ebook = {
+	title: string;
+	name: string;
+	price: number;
+	curr: string;
+	date: string; // Assuming this is a string representation of a date
+	fromNBP: {
+		pricePLN: number;
+		rate: number;
+		tableNo: string;
+	};
+};
+
+export { Ebook };

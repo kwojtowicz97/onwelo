@@ -10,7 +10,7 @@
 	};
 </script>
 
-<table class="table table-striped table-bordered">
+<table class="table table-striped table-bordered mt-2">
 	<thead>
 		<tr>
 			<th scope="col">Name</th>
