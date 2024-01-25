@@ -1,7 +1,7 @@
 <script>
 	import { page } from '$app/stores';
 
-	const pathname = $page.url.pathname;
+	$: pathname = $page.url.pathname;
 </script>
 
 <div style="min-height: 100dvh;">
