@@ -34,7 +34,7 @@
 							>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" class:active={pathname === '/ebooks'} href="/browse"
+							<a class="nav-link" class:active={pathname === '/browse'} href="/browse"
 								>Browse Ebooks</a
 							>
 						</li>
