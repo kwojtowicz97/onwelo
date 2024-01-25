@@ -108,6 +108,7 @@
 				<input
 					bind:value={priceMinUsd}
 					type="number"
+					min="0"
 					class="form-control"
 					id="price-min-usd"
 					placeholder="Enter min price (USD)"
@@ -118,6 +119,7 @@
 				<input
 					bind:value={priceMaxUsd}
 					type="number"
+					min="0"
 					class="form-control"
 					id="price-max-usd"
 					placeholder="Enter max price (USD)"
@@ -128,6 +130,7 @@
 				<input
 					bind:value={priceMinPln}
 					type="number"
+					min="0"
 					class="form-control"
 					id="price-min-pln"
 					placeholder="Enter min price (PLN)"
@@ -138,6 +141,7 @@
 				<input
 					bind:value={priceMaxPln}
 					type="number"
+					min="0"
 					class="form-control"
 					id="price-max-pln"
 					placeholder="Enter max price (PLN)"

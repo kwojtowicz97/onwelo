@@ -35,7 +35,7 @@
 
 {#if !data}
 	<div class="d-flex justify-content-center mt-5">
-		<form on:submit={submitHandler} class="w-50">
+		<form on:submit={submitHandler} style="max-width: 700px;">
 			<label for="" class="form-label">Select file</label>
 			<input
 				bind:value={file}
